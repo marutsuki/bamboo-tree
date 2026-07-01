@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= name %></title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem;
+        background: #111827;
+        color: #f9fafb;
+      }
+
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin-bottom: 1rem;
+        font-size: 1.75rem;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 1.25rem;
+        margin: 0.35rem 0;
+      }
+
+      li {
+        margin: 0.2rem 0;
+      }
+
+      .node {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .entry {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.2rem 0.35rem;
+        border-radius: 0.35rem;
+      }
+
+      .entry:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .icon {
+        font-size: 1rem;
+      }
+
+      .name {
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1><%= name %></h1>
+      <ul class="tree">
+        <% function renderNode(node) { %>
+          <li class="node">
+            <span class="entry">
+              <span class="icon"><%= node.type === "directory" ? "📁" : "📄" %></span>
+              <span class="name"><%= node.name %></span>
+            </span>
+            <% if (node.type === "directory" && Array.isArray(node.children) && node.children.length > 0) { %>
+              <ul>
+                <% node.children.forEach(function (child) { %>
+                  <% renderNode(child); %>
+                <% }); %>
+              </ul>
+            <% } %>
+          </li>
+        <% } %>
+        <% renderNode({ name, type, children }); %>
+      </ul>
+    </main>
+  </body>
+</html>
