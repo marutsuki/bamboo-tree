@@ -22,7 +22,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
-    "test": "npm run typecheck && node --test src/tree.spec.ts src/template.spec.ts",
+    "test": "npm run typecheck && node --test --experimental-strip-types src/tree.spec.ts src/template.spec.ts",
     "prepublishOnly": "npm run build && npm run typecheck"
   },
   "engines": {
