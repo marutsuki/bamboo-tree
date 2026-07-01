@@ -1,6 +1,6 @@
 {
   "name": "bamboo-tree",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Parse your file directory into a nice index.html home page.",
   "type": "module",
   "bin": {
