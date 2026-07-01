@@ -9,12 +9,16 @@ const templatePath = path.resolve(
   "../templates/index.ejs",
 );
 
-function renderTemplate(data: TreeNode, outputFile: string): Promise<void> {
+function renderTemplate(
+  data: TreeNode,
+  name: string,
+  outputFile: string,
+): Promise<void> {
   // Re-order nodes so that directories come before files, for better visual representation in the HTML.
   data = sortTree(structuredClone(data));
   data = clearEmptyDirectories(data);
   return new Promise((resolve, reject) => {
-    ejs.renderFile(templatePath, { root: data }, (err, str) => {
+    ejs.renderFile(templatePath, { root: data, name }, (err, str) => {
       if (err !== null) {
         console.error(err);
         reject(err);
