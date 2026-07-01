@@ -15,6 +15,11 @@ program
     "output file for the rendered HTML",
     "index.html",
   )
+  .option(
+    "--exclude <exclude>",
+    "comma-separated list of files/directories to exclude (default: .git)",
+    ".git",
+  )
   .parse(process.argv);
 
 const options = program.opts();
@@ -22,4 +27,8 @@ createNiceTree({
   root: options.root,
   name: options.name,
   outputFile: options.output,
+  exclude: options.exclude
+    .split(",")
+    .map((entry: string) => entry.trim())
+    .filter(Boolean),
 });

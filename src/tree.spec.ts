@@ -160,6 +160,45 @@ test("includes empty directories as children with an empty children array", () =
   });
 });
 
+test("omits excluded directories from the tree", () => {
+  const root = createTempDirectory();
+  const srcDirectory = path.join(root, "src");
+  const docsDirectory = path.join(root, "docs");
+
+  fs.mkdirSync(srcDirectory, { recursive: true });
+  fs.mkdirSync(docsDirectory, { recursive: true });
+  fs.writeFileSync(path.join(root, "README.md"), "# Hello\n");
+  fs.writeFileSync(path.join(srcDirectory, "index.ts"), "export {}\n");
+  fs.writeFileSync(path.join(docsDirectory, "guide.md"), "# Guide\n");
+
+  const tree = getDirectoryTree(root, ["docs"]);
+
+  assert.deepStrictEqual(normalizeTree(tree), {
+    name: path.basename(root),
+    type: "directory",
+    path: "",
+    children: [
+      {
+        name: "README.md",
+        type: "file",
+        path: "README.md",
+      },
+      {
+        name: "src",
+        type: "directory",
+        path: "src",
+        children: [
+          {
+            name: "index.ts",
+            type: "file",
+            path: "src/index.ts",
+          },
+        ],
+      },
+    ],
+  });
+});
+
 test("throws when the provided path does not exist", () => {
   const missingPath = path.join(createTempDirectory(), "missing", "file.txt");
 
