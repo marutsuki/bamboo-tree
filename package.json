@@ -1,0 +1,15 @@
+{
+  "name": "nice-tree",
+  "version": "0.0.1",
+  "description": "Parse your file directory into a nice index.html home page.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Lucien Lu",
+    "email": "lucienlu2000@gmail.com",
+    "url": "https://marutsuki.com/"
+  },
+  "license": "ISC"
+}
