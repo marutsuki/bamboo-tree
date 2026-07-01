@@ -4,7 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><%= root.name %></title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
+      @import "tailwindcss";
+      @plugin "daisyui" {
+        themes: nord --default, night --prefersdark;
+      }
       :root {
         color-scheme: light dark;
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -13,13 +20,9 @@
       body {
         margin: 0;
         padding: 2rem;
-        background: #111827;
-        color: #f9fafb;
-      }
-
-      main {
-        max-width: 960px;
-        margin: 0 auto;
+        background: #efefef;
+        height: 100vh;
+        color: #1e1e1e;
       }
 
       h1 {
@@ -27,63 +30,45 @@
         font-size: 1.75rem;
       }
 
-      ul {
-        list-style: none;
-        padding-left: 1.25rem;
-        margin: 0.35rem 0;
-      }
-
-      li {
-        margin: 0.2rem 0;
-      }
-
-      .node {
-        display: flex;
-        flex-direction: column;
-        gap: 0.15rem;
-      }
-
-      .entry {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.2rem 0.35rem;
-        border-radius: 0.35rem;
-      }
-
-      .entry:hover {
-        background: rgba(255, 255, 255, 0.08);
-      }
-
       .icon {
         font-size: 1rem;
-      }
-
-      .name {
-        font-weight: 500;
       }
     </style>
   </head>
   <body>
-    <main>
+    <main class="container mx-auto p-4">
       <h1><%= root.name %></h1>
       <ul class="tree">
-        <% function renderNode(node) { %>
+        <% function renderNode(node, isRoot = false) { %>
           <li class="node">
             <span class="entry">
-              <span class="icon"><%= node.type === "directory" ? "📁" : "📄" %></span>
-              <a class="name" href="<%= node.path %>"><%= node.name %></a>
-            </span>
-            <% if (node.type === "directory" && Array.isArray(node.children) && node.children.length > 0) { %>
-                        <ul>
+              <% if (node.type === "directory") { %>
+                <div class="collapse bg-base-100 border border-base-300 <%= isRoot ? "collapse-open" : "" %>">
+                  <input type="checkbox" />
+                  <div class="collapse-title font-semibold flex flex-start items-center gap-2">
+                    <i class="fa-solid fa-folder icon mt-1"></i><%= node.name %>
+                  </div>
+                  <% if (Array.isArray(node.children) && node.children.length > 0) { %>
+                    <div class="collapse-content">
+                        <ul class="flex flex-col gap-2">
                             <% node.children.forEach(function (child) { %>
                                 <% renderNode(child); %>
                                 <% }); %>
                         </ul>
+                    </div>
+                  <% } %>
+                </div>
+              <% } else { %>
+                <div class="flex items-center gap-2 ml-4">
+                  <i class="fa-solid fa-file icon mt-1"></i>
+                  <a class="link link-secondary" href="<%= node.path %>"><%= node.name %></a>
+                </div>
               <% } %>
+            </span>
+            
           </li>
         <% } %>
-        <% renderNode(root); %>
+        <% renderNode(root, true); %>
       </ul>
     </main>
   </body>
