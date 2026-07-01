@@ -12,6 +12,7 @@ const templatePath = path.resolve(
 function renderTemplate(data: TreeNode, outputFile: string): Promise<void> {
   // Re-order nodes so that directories come before files, for better visual representation in the HTML.
   data = sortTree(structuredClone(data));
+  data = clearEmptyDirectories(data);
   return new Promise((resolve, reject) => {
     ejs.renderFile(templatePath, { root: data }, (err, str) => {
       if (err !== null) {
@@ -42,6 +43,19 @@ function sortTree(node: TreeNode): TreeNode {
       return a.type === "directory" ? -1 : 1;
     });
     node.children = node.children.map(sortTree);
+  }
+  return node;
+}
+
+function clearEmptyDirectories(node: TreeNode): TreeNode {
+  if (node.type === "directory" && node.children) {
+    node.children = node.children
+      .map(clearEmptyDirectories)
+      .filter(
+        (child) =>
+          child.type !== "directory" ||
+          (child.children && child.children.length > 0),
+      );
   }
   return node;
 }
