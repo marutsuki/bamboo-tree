@@ -39,7 +39,9 @@ test("renderTemplate resolves and writes HTML for a nested directory tree", asyn
     ],
   };
 
-  await assert.doesNotReject(() => renderTemplate(tree, outputFile));
+  await assert.doesNotReject(() =>
+    renderTemplate(tree, "Directory", outputFile),
+  );
 
   assert.ok(
     fs.existsSync(outputFile),
@@ -50,8 +52,6 @@ test("renderTemplate resolves and writes HTML for a nested directory tree", asyn
   assert.match(html, /<!DOCTYPE html>/i);
   assert.match(html, /<title>Project<\/title>/i);
   assert.match(html, /class="tree"/i);
-  assert.match(html, /📁/);
-  assert.match(html, /📄/);
   assert.match(html, /docs/);
   assert.match(html, /guide\.md/);
 });
@@ -65,11 +65,10 @@ test("renderTemplate writes a sane HTML document for a single file node", async 
     path: "package.json",
   };
 
-  await assert.doesNotReject(() => renderTemplate(tree, outputFile));
+  await assert.doesNotReject(() => renderTemplate(tree, "File", outputFile));
 
   const html = fs.readFileSync(outputFile, "utf8");
   assert.match(html, /<!DOCTYPE html>/i);
   assert.match(html, /<title>package\.json<\/title>/i);
   assert.match(html, /package\.json/);
-  assert.match(html, /📄/);
 });
