@@ -66,7 +66,7 @@
   </head>
   <body>
     <main>
-      <h1><%= name %></h1>
+      <h1><%= root.name %></h1>
       <ul class="tree">
         <% function renderNode(node) { %>
           <li class="node">
@@ -75,15 +75,15 @@
               <a class="name" href="<%= node.path %>"><%= node.name %></a>
             </span>
             <% if (node.type === "directory" && Array.isArray(node.children) && node.children.length > 0) { %>
-              <ul>
-                <% node.children.forEach(function (child) { %>
-                  <% renderNode(child); %>
-                <% }); %>
-              </ul>
-            <% } %>
+                        <ul>
+                            <% node.children.forEach(function (child) { %>
+                                <% renderNode(child); %>
+                                <% }); %>
+                        </ul>
+              <% } %>
           </li>
         <% } %>
-        <% renderNode({ name, type, children }); %>
+        <% renderNode(root); %>
       </ul>
     </main>
   </body>
