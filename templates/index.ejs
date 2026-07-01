@@ -17,11 +17,6 @@
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
-      h1 {
-        margin-bottom: 1rem;
-        font-size: 1.75rem;
-      }
-
       .icon {
         font-size: 1rem;
       }
@@ -130,8 +125,7 @@
   </head>
   <body class="bg-base-200 text-base-content min-h-screen pb-20">
     <main class="container mx-auto p-4 pb-16">
-      <h1><%= root.name %></h1>
-      <hr/>
+      <h1 class="text-2xl mb-4 ml-10"><%= root.name %></h1>
       <ul class="tree">
         <% function renderNode(node, isRoot = false) { %>
           <% const sprigVariant = isRoot ? 0 : Math.floor(Math.random() * 10); %>
@@ -160,7 +154,7 @@
               <% if (node.type === "directory") { %>
                 <div class="collapse bg-base-100 border border-base-300 <%= isRoot ? "collapse-open" : "" %>">
                   <input type="checkbox" />
-                  <div class="collapse-title h-12 font-semibold flex flex-start items-center gap-2">
+                  <div class="collapse-title h-12 font-semibold flex flex-start items-center gap-2 text-base">
                     <i class="fa-solid fa-folder icon mt-1"></i><%= node.name %>
                   </div>
                   <% if (Array.isArray(node.children) && node.children.length > 0) { %>
@@ -176,7 +170,7 @@
               <% } else { %>
                 <div class="file-entry h-12 flex items-center gap-2 ml-4">
                   <i class="fa-solid fa-file icon mt-1"></i>
-                  <a class="link link-secondary" href="<%= node.path %>"><%= node.name %></a>
+                  <a class="link link-secondary text-base" href="<%= node.path %>"><%= node.name %></a>
                 </div>
               <% } %>
             </span>
@@ -186,8 +180,44 @@
         <% renderNode(root, true); %>
       </ul>
     </main>
-    <footer class="fixed bottom-0 left-0 right-0 h-12 border-t border-base-300 bg-base-200/95 px-4 py-3 text-sm flex items-center justify-center backdrop-blur">
-      Made with <a href="https://github.com/marutsuki/nice-tree" target="_blank" class="link link-primary ml-1">Nice Tree</a>
+    <footer class="fixed bottom-0 left-0 right-0 h-12 border-t border-base-300 bg-base-200/95 px-4 py-3 text-sm flex items-center justify-between backdrop-blur">
+        <span>You can try it too (requires Node.js v18+):
+          <code id="install-cmd" class="transition-all duration-200 container bg-accent/30 text-accent-content p-2 rounded-md cursor-pointer" title="Click to copy">npx nice-tree --name "My Directory" --path /path/to/directory</code>
+        </span>
+      <span>Made with<a href="https://github.com/marutsuki/nice-tree" target="_blank" class="link link-primary ml-1">Nice Tree</a></span>
     </footer>
+    <script>
+      (function(){
+        const el = document.getElementById('install-cmd');
+        if (!el) return;
+        el.addEventListener('click', async function(){
+          const text = el.textContent.trim();
+          try {
+            await navigator.clipboard.writeText(text);
+            const prev = {
+                textContent: el.textContent,
+                color: el.style.color,
+                backgroundColor: el.style.backgroundColor
+            };
+            el.style.color = 'var(--color-secondary-content)';
+            el.style.backgroundColor = 'var(--color-secondary)';
+            el.textContent = 'Copied!';
+            setTimeout(()=> {
+                el.textContent = prev.textContent;
+                el.style.color = prev.color;
+                el.style.backgroundColor = prev.backgroundColor;
+            }, 1200);
+          } catch (e) {
+            const inp = document.createElement('textarea');
+            inp.value = text;
+            document.body.appendChild(inp);
+            inp.select();
+            try { document.execCommand('copy'); el.textContent = 'Copied!'; } catch(e) {}
+            document.body.removeChild(inp);
+            setTimeout(()=> el.textContent = text, 1200);
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
